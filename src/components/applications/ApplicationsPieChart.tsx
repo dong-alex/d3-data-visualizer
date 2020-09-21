@@ -68,10 +68,52 @@ const ApplicationPieChart: FunctionComponent<ApplicationPieChartProps> = ({
   // SVG scales up or down
   return (
     <NavigationLayout>
-      <h2 className="text-center">Application Pie Chart using d3.js</h2>
-      <svg height="500px" width="100%" viewBox="0 0 300 300">
-        <g ref={ref} transform={`translate(150, 150)`} />
-      </svg>
+      <h2 className="mt-5 mb-5">Application Pie Chart using d3.js</h2>
+      <p className="text-monospace">
+        A pie chart using random data during each visit.
+      </p>
+      <p className="text-monospace">Learning experiences:</p>
+      <ul>
+        <li>
+          <code>(d3.Selection).exit().remove()</code> will remove any of the old
+          data previously contained and returns it. Similar to popping items out
+          of lists, it returns the elements removed.
+        </li>
+        <li>
+          <code>.pie.value(...)</code> will invoke a function per value in an
+          array of data.
+        </li>
+        <li>
+          You can include classes within the elements you select i.e.{" "}
+          <code>.selectAll("g.arc")</code> would generate per data point, a
+          group SVG element with the <code>className="arc"</code>
+        </li>
+        <li>
+          <code>d3.arc().innerRadius(...).outerRadius(...)</code> creates the
+          coordinates required to generate a part of the pie chart with the{" "}
+          <code>path</code> element. A sample of the value created can be{" "}
+          <code>
+            M-87.99594792644156,47.50487499748829A100,100,0,0,1,-1.8369701987210297e-14,-100L0,0Z
+          </code>
+        </li>
+        <li>
+          You can setup the height of the SVG canvas. The current example is
+          500px with the width at 100%. Viewbox in the height/width can dictate
+          the 'size' of the element based on zoom. Transformation of the
+          elements like 'g' can use the viewBox height/width as a guideline to
+          'center' the element in the SVG canvas. Use the grid to visualize the
+          container with the SVG element with the same dimensions.
+        </li>
+      </ul>
+      <MDBContainer
+        style={{
+          background: "url(http://i.stack.imgur.com/GySvQ.png)",
+        }}
+      >
+        <svg height="500px" width="100%" viewBox="0 0 300 300">
+          <g ref={ref} transform={`translate(150, 150)`} />
+        </svg>
+      </MDBContainer>
     </NavigationLayout>
   );
 };

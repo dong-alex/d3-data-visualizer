@@ -36,7 +36,7 @@ const NavigationLayout: FunctionComponent<NavigationLayoutProps> = ({
         >
           <MDBContainer>
             <MDBNavbarBrand href="/">
-              <strong>Navbar</strong>
+              <strong>d3.js</strong>
             </MDBNavbarBrand>
             <MDBNavbarToggler onClick={handleClick} />
             <MDBCollapse isOpen={collapse} navbar>
