@@ -50,6 +50,9 @@ const NavigationLayout: FunctionComponent<NavigationLayoutProps> = ({
                 <MDBNavItem>
                   <MDBNavLink to="/pie">Pie</MDBNavLink>
                 </MDBNavItem>
+                <MDBNavItem>
+                  <MDBNavLink to="/jobs">Applications</MDBNavLink>
+                </MDBNavItem>
               </MDBNavbarNav>
             </MDBCollapse>
           </MDBContainer>
