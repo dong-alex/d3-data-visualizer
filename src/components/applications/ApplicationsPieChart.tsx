@@ -1,13 +1,19 @@
 import React, { useState, useEffect, useRef, FunctionComponent } from "react";
-import useInterval from "../useInterval";
 import NavigationLayout from "../NavigationLayout";
 import * as d3 from "d3";
 import { MDBContainer } from "mdbreact";
-import { Arc, DefaultArcObject } from "d3";
 
 type ApplicationPieChartProps = {
   data: any;
 };
+
+const createArc: any = d3.arc().innerRadius(0).outerRadius(100);
+const colors = d3.scaleOrdinal(d3.schemeCategory10);
+const format = d3.format(".2f");
+const pieData: any = d3
+  .pie()
+  .value((d: any) => d.value)
+  .sort(null);
 
 const ApplicationPieChart: FunctionComponent<ApplicationPieChartProps> = ({
   data,
@@ -18,15 +24,13 @@ const ApplicationPieChart: FunctionComponent<ApplicationPieChartProps> = ({
       value:
         value === null || value === undefined ? Math.random() * 100 : value,
     }));
-  const pieData: any = d3
-    .pie()
-    .value((d: any) => d.value)
-    .sort(null);
-  const [dataset, setDataset] = useState<any[]>(generateData());
+
+  const [dataset, setDataset] = useState<any[]>([]);
   const ref = useRef(null);
-  const createArc: any = d3.arc().innerRadius(0).outerRadius(100);
-  const colors = d3.scaleOrdinal(d3.schemeCategory10);
-  const format = d3.format(".2f");
+
+  useEffect(() => {
+    setDataset(generateData());
+  }, []);
 
   useEffect(() => {
     const group = d3.select(ref.current);

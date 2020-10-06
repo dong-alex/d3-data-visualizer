@@ -8,8 +8,6 @@ import {
   MDBNavItem,
   MDBNavLink,
   MDBContainer,
-  MDBMask,
-  MDBView,
 } from "mdbreact";
 
 type NavigationLayoutProps = {
@@ -49,6 +47,9 @@ const NavigationLayout: FunctionComponent<NavigationLayoutProps> = ({
                 </MDBNavItem>
                 <MDBNavItem>
                   <MDBNavLink to="/pie">Pie</MDBNavLink>
+                </MDBNavItem>
+                <MDBNavItem>
+                  <MDBNavLink to="/jobs">Applications</MDBNavLink>
                 </MDBNavItem>
               </MDBNavbarNav>
             </MDBCollapse>
