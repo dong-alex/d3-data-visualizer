@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useRef, FunctionComponent } from "react";
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  useCallback,
+  FunctionComponent,
+} from "react";
 import * as d3 from "d3";
 import NavigationLayout from "../NavigationLayout";
 import { MDBContainer } from "mdbreact";
@@ -12,19 +18,68 @@ export type JobData = {
   company: string;
   status: string;
   location: string;
+  position: string;
+  link: string;
 };
-
-enum Status {
-  Submitted = 0,
-  Rejected = 1,
-  Offer = 2,
-  Phone = 3,
-}
 
 const JobApplicationPieChart: FunctionComponent<{}> = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const ref = useRef(null);
   const [data, setData] = useState<{ status: string; count: number }[]>([]);
+
+  const initClient = useCallback(() => {
+    gapi.client
+      .init({
+        apiKey: process.env.REACT_APP_GOOGLE_API_KEY,
+        clientId: process.env.REACT_APP_GOOGLE_CLIENT_ID,
+        discoveryDocs: DISCOVERY_DOCS,
+        scope: SCOPES,
+      })
+      .then(() => {
+        setLoading(false);
+        getApplications();
+      });
+  }, []);
+
+  const getApplications = () => {
+    gapi.client.sheets.spreadsheets.values
+      .get({
+        spreadsheetId: "1ELzmT3kjB90-04hE6kMSHKlhssfgBw85xcmJfDtYi6E",
+        range: "Job Applications!A2:E",
+      })
+      .then((response) => {
+        var range = response.result;
+        if (range && range.values) {
+          if (range.values.length > 0) {
+            const applications: JobData[] = [];
+            range.values.forEach((row) => {
+              const [company, position, location, link, status] = row;
+              applications.push({ company, location, status, position, link });
+            });
+
+            const enumData: Map<string, number> = new Map();
+            applications.forEach(({ status }: JobData) => {
+              const value = enumData.get(status);
+              if (value) {
+                enumData.set(status, value + 1);
+              } else {
+                enumData.set(status, 1);
+              }
+            });
+
+            // group the categories by submitted, rejected and others
+            // const pieData = d3.pie(enumData);
+            const array: { status: string; count: number }[] = [];
+
+            enumData.forEach((value, key) => {
+              array.push({ status: key, count: value });
+            });
+
+            setData(array);
+          }
+        }
+      });
+  };
 
   useEffect(() => {
     const script: HTMLScriptElement = document.createElement("script");
@@ -33,7 +88,7 @@ const JobApplicationPieChart: FunctionComponent<{}> = () => {
       gapi.load("client:auth2", initClient);
     };
     document.body.appendChild(script);
-  }, []);
+  }, [initClient]);
 
   useEffect(() => {
     if (data) {
@@ -94,60 +149,6 @@ const JobApplicationPieChart: FunctionComponent<{}> = () => {
     }
   }, [data]);
 
-  const initClient = () => {
-    gapi.client
-      .init({
-        apiKey: process.env.REACT_APP_GOOGLE_API_KEY,
-        clientId: process.env.REACT_APP_GOOGLE_CLIENT_ID,
-        discoveryDocs: DISCOVERY_DOCS,
-        scope: SCOPES,
-      })
-      .then(() => {
-        setLoading(false);
-        getApplications();
-      });
-  };
-
-  const getApplications = () => {
-    gapi.client.sheets.spreadsheets.values
-      .get({
-        spreadsheetId: "1ELzmT3kjB90-04hE6kMSHKlhssfgBw85xcmJfDtYi6E",
-        range: "Job Applications!A2:E",
-      })
-      .then((response) => {
-        var range = response.result;
-        if (range && range.values) {
-          if (range.values.length > 0) {
-            const applications: JobData[] = [];
-            range.values.forEach((row) => {
-              const [company, _, location, __, status] = row;
-              applications.push({ company, location, status });
-            });
-
-            const enumData: Map<string, number> = new Map();
-            applications.forEach(({ status }: JobData) => {
-              const value = enumData.get(status);
-              if (value) {
-                enumData.set(status, value + 1);
-              } else {
-                enumData.set(status, 1);
-              }
-            });
-
-            // group the categories by submitted, rejected and others
-            // const pieData = d3.pie(enumData);
-            const array: { status: string; count: number }[] = [];
-
-            enumData.forEach((value, key) => {
-              array.push({ status: key, count: value });
-            });
-
-            setData(array);
-          }
-        }
-      });
-  };
-
   return (
     <NavigationLayout>
       <div>
@@ -156,6 +157,24 @@ const JobApplicationPieChart: FunctionComponent<{}> = () => {
           A pie chart using Google Sheets API that pulls data about my job
           applications.
         </p>
+        <p className="text-monospace">Learning experiences:</p>
+        <ul>
+          <li>
+            <code>(text).call</code> is similar to the map function for arrays,
+            you can filter them based on their internal attributes i.e.
+            transforms
+          </li>
+          <li>
+            <code>.path</code> traces based on what d3.js object is drawn i.e.
+            arcs
+          </li>
+          <li>
+            Access the data objects via <code>d.data.[objectName]</code>.
+            Function calls would call it for every value unless you filter it
+            based on some spec. In this example, small angles in the pi chart is
+            neglected and no text is given.
+          </li>
+        </ul>
         {!loading && (
           <MDBContainer
             style={{
