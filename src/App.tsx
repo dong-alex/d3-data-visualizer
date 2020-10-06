@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import BasicD3Shape from "./components/basic/BasicD3Shape";
 import ApplicationPieChart from "./components/applications/ApplicationsPieChart";
