@@ -3,9 +3,6 @@ import * as d3 from "d3";
 import NavigationLayout from "../NavigationLayout";
 import { MDBContainer } from "mdbreact";
 
-const CLIENT_ID =
-  "82265098969-1r4hked0o8ga6gbvdfbsrfriigjodeln.apps.googleusercontent.com";
-const API_KEY = "AIzaSyDBHs57eFNSQsiTit2RlGHl4MDUrbIlmBo";
 const DISCOVERY_DOCS = [
   "https://sheets.googleapis.com/$discovery/rest?version=v4",
 ];
@@ -100,8 +97,8 @@ const JobApplicationPieChart: FunctionComponent<{}> = () => {
   const initClient = () => {
     gapi.client
       .init({
-        apiKey: API_KEY,
-        clientId: CLIENT_ID,
+        apiKey: process.env.REACT_APP_GOOGLE_API_KEY,
+        clientId: process.env.REACT_APP_GOOGLE_CLIENT_ID,
         discoveryDocs: DISCOVERY_DOCS,
         scope: SCOPES,
       })
