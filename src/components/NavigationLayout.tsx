@@ -8,8 +8,6 @@ import {
   MDBNavItem,
   MDBNavLink,
   MDBContainer,
-  MDBMask,
-  MDBView,
 } from "mdbreact";
 
 type NavigationLayoutProps = {
